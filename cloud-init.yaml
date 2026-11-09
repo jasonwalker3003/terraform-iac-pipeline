@@ -1,0 +1,9 @@
+#cloud-config
+package_update: true
+packages:
+  - nginx
+write_files:
+  - path: /var/www/html/index.html
+    defer: true
+    content: |
+      Built by Terraform, configured by cloud-init
