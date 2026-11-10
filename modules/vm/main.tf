@@ -1,35 +1,35 @@
 resource "azurerm_public_ip" "vm" {
-  name                = "pip-${var.prefix}"
-  location            = data.azurerm_resource_group.lab.location
-  resource_group_name = data.azurerm_resource_group.lab.name
+  name                = "pip-${var.name}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
   allocation_method   = "Static"
   sku                 = "Standard"
-  tags                = local.tags
+  tags                = var.tags
 }
 
 resource "azurerm_network_interface" "vm" {
-  name                = "nic-${var.prefix}"
-  location            = data.azurerm_resource_group.lab.location
-  resource_group_name = data.azurerm_resource_group.lab.name
-  tags                = local.tags
+  name                = "nic-${var.name}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  tags                = var.tags
 
   ip_configuration {
     name                          = "ipconfig1"
-    subnet_id                     = azurerm_subnet.vm.id
+    subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.vm.id
   }
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                  = "vm-${var.prefix}"
-  location              = data.azurerm_resource_group.lab.location
-  resource_group_name   = data.azurerm_resource_group.lab.name
-  size                  = var.vm_size
+  name                  = "vm-${var.name}"
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+  size                  = var.size
   custom_data           = base64encode(file("${path.module}/cloud-init.yaml"))
   admin_username        = "jason"
   network_interface_ids = [azurerm_network_interface.vm.id]
-  tags                  = local.tags
+  tags                  = var.tags
 
   admin_ssh_key {
     username   = "jason"
@@ -51,11 +51,11 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
 resource "azurerm_dev_test_global_vm_shutdown_schedule" "vm" {
   virtual_machine_id    = azurerm_linux_virtual_machine.vm.id
-  location              = data.azurerm_resource_group.lab.location
+  location              = var.location
   enabled               = true
-  daily_recurrence_time = "2300"
+  daily_recurrence_time = var.shutdown_time
   timezone              = "GMT Standard Time"
-  tags                  = local.tags
+  tags                  = var.tags
 
   notification_settings {
     enabled = false

@@ -1,19 +1,9 @@
-output "resource_group" {
-  value = data.azurerm_resource_group.lab.name
-}
-
-output "vnet_id" {
-  value = azurerm_virtual_network.lab.id
-}
-
 output "public_ip" {
-  value = azurerm_public_ip.vm.ip_address
-}
-
-output "ssh_command" {
-  value = "ssh jason@${azurerm_public_ip.vm.ip_address}"
+  description = "The VM's public IP."
+  value       = module.vm.public_ip
 }
 
 output "web_url" {
-  value = "http://${azurerm_public_ip.vm.ip_address}/"
+  description = "The nginx home page."
+  value       = "http://${module.vm.public_ip}/"
 }
