@@ -1,23 +1,23 @@
-resource "azurerm_virtual_network" "lab" {
-  name                = "vnet-${var.prefix}"
-  location            = data.azurerm_resource_group.lab.location
-  resource_group_name = data.azurerm_resource_group.lab.name
-  address_space       = ["10.50.0.0/16"]
-  tags                = local.tags
+resource "azurerm_virtual_network" "this" {
+  name                = "vnet-${var.name}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  address_space       = [var.address_space]
+  tags                = var.tags
 }
 
 resource "azurerm_subnet" "vm" {
   name                 = "snet-vm"
-  resource_group_name  = data.azurerm_resource_group.lab.name
-  virtual_network_name = azurerm_virtual_network.lab.name
-  address_prefixes     = ["10.50.1.0/24"]
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.this.name
+  address_prefixes     = [cidrsubnet(var.address_space, 8, 1)]
 }
 
 resource "azurerm_network_security_group" "vm" {
-  name                = "nsg-${var.prefix}"
-  location            = data.azurerm_resource_group.lab.location
-  resource_group_name = data.azurerm_resource_group.lab.name
-  tags                = local.tags
+  name                = "nsg-${var.name}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  tags                = var.tags
 
   security_rule {
     name                       = "allow-ssh-from-me"

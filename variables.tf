@@ -1,16 +1,15 @@
-variable "location" {
-  description = "Azure region for everything in this lab."
-  type        = string
-  default     = "uksouth"
-}
-
 variable "prefix" {
   description = "Short name used in every resource name."
   type        = string
 }
 
+variable "resource_group_name" {
+  description = "The existing resource group to build in."
+  type        = string
+}
+
 variable "my_ip" {
-  description = "Your public IP. Only this address can SSH in."
+  description = "Your public IP. Only this address can reach the VM."
   type        = string
 }
 
@@ -20,12 +19,7 @@ variable "ssh_public_key" {
 }
 
 variable "vm_size" {
-  description = "VM size for Thursday's lab."
+  description = "VM size."
   type        = string
   default     = "Standard_B1s"
-}
-
-variable "resource_group_name" {
-  description = "The existing resource group to build in."
-  type        = string
 }
