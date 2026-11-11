@@ -6,4 +6,4 @@ write_files:
   - path: /var/www/html/index.html
     defer: true
     content: |
-      Built by Terraform, configured by cloud-init
+      Deployed by my pipeline
