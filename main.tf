@@ -32,3 +32,7 @@ module "vm" {
   ssh_public_key      = var.ssh_public_key
   tags                = local.tags
 }
+
+locals {
+      oops = "badly indented"
+}
