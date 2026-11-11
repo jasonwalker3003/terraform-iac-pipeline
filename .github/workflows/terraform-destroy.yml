@@ -1,0 +1,39 @@
+name: Terraform destroy
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: terraform
+  cancel-in-progress: false
+
+env:
+  ARM_USE_OIDC: true
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  TF_VAR_my_ip: ${{ secrets.MY_IP }}
+  TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.17.1
+
+      - name: Init
+        run: terraform init -input=false
+
+      - name: Destroy
+        run: terraform destroy -input=false -auto-approve -lock-timeout=2m
