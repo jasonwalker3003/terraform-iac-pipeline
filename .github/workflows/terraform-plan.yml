@@ -38,3 +38,22 @@ jobs:
 
       - name: Plan
         run: terraform plan -input=false -lock-timeout=2m
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+
+      - name: Set up tflint
+        uses: terraform-linters/setup-tflint@v6
+
+      - name: Run tflint
+        run: |
+          tflint --init
+          tflint --recursive --minimum-failure-severity=warning
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Run Checkov
+        run: pipx run checkov --directory . --config-file .checkov.yaml
