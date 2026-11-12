@@ -1,0 +1,7 @@
+framework:
+  - terraform
+compact: true
+quiet: true
+skip-check:
+  - CKV_AZURE_50  # extensions stay allowed so Azure Run Command works on this VM
+  - CKV_AZURE_119 # lab VM: the public IP is deliberate, and the NSG only allows my IP
