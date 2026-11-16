@@ -5,3 +5,4 @@ quiet: true
 skip-check:
   - CKV_AZURE_50  # extensions stay allowed so Azure Run Command works on this VM
   - CKV_AZURE_119 # lab VM: the public IP is deliberate, and the NSG only allows my IP
+  - CKV_TF_1  # Registry module Azure/naming pinned to exact version 0.4.4; registry sources can't use commit hashes
