@@ -17,7 +17,7 @@ Azure infrastructure deployed only through a pipeline: a VNet, an NSG and a Linu
 ## Layout
 - modules/network: VNet, subnet and NSG.
 - modules/vm: public IP, NIC, Linux VM with cloud-init and auto-shutdown.
-- moved.tf: how the code was refactored into modules without rebuilding anything.
+- envs/: dev's variables and state key. Prod uses the defaults and terraform.tfvars.
 
 ## What I learned
 - 

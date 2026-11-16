@@ -23,3 +23,21 @@ variable "vm_size" {
   type        = string
   default     = "Standard_B1s"
 }
+
+variable "environment" {
+  description = "dev or prod."
+  type        = string
+  default     = "prod"
+}
+
+variable "address_space" {
+  description = "The VNet's address range. Each environment needs its own."
+  type        = string
+  default     = "10.50.0.0/16"
+}
+
+variable "create_vm" {
+  description = "Whether this environment gets a VM."
+  type        = bool
+  default     = true
+}
