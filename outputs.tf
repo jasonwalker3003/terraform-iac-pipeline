@@ -12,3 +12,8 @@ output "key_vault_name_example" {
   description = "A name the Azure/naming module would give a Key Vault."
   value       = module.naming.key_vault.name_unique
 }
+
+output "vm_principal_id" {
+  description = "The VM's managed identity, or null when there's no VM."
+  value       = one(module.vm[*].principal_id)
+}
