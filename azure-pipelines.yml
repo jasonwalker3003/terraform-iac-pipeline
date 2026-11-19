@@ -5,7 +5,7 @@ pool:
   name: Default
 
 variables:
-  - group: iac-settings
+  - group: iac-secrets
   - name: serviceConnection
     value: azure-iac
 
@@ -35,8 +35,8 @@ stages:
                 terraform validate
                 terraform plan -input=false -lock-timeout=2m
             env:
-              TF_VAR_my_ip: $(MY_IP)
-              TF_VAR_ssh_public_key: $(SSH_PUBLIC_KEY)
+              TF_VAR_my_ip: $(my-ip)
+              TF_VAR_ssh_public_key: $(ssh-public-key)
 
   - stage: Apply
     dependsOn: Plan
@@ -65,5 +65,5 @@ stages:
                       terraform plan -input=false -lock-timeout=2m -out=tfplan
                       terraform apply -input=false tfplan
                   env:
-                    TF_VAR_my_ip: $(MY_IP)
-                    TF_VAR_ssh_public_key: $(SSH_PUBLIC_KEY)
+                    TF_VAR_my_ip: $(my-ip)
+                    TF_VAR_ssh_public_key: $(ssh-public-key)
