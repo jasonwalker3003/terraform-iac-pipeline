@@ -26,7 +26,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   location              = var.location
   resource_group_name   = var.resource_group_name
   size                  = var.size
-  custom_data           = base64encode(file("${path.module}/cloud-init.yaml"))
+  custom_data           = base64encode(var.cloud_init != "" ? var.cloud_init : file("${path.module}/cloud-init.yaml"))
   admin_username        = "jason"
   network_interface_ids = [azurerm_network_interface.vm.id]
   tags                  = var.tags

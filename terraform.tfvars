@@ -1,2 +1,6 @@
 prefix              = "iac-w06"
 resource_group_name = "rg-iac-w06"
+vm_size             = "Standard_B2s"
+app_image           = "docker-node-mongo:1.0.0"
+acr_name            = "acrjw8abd49"
+key_vault_name      = "kv-iac-553bbe"

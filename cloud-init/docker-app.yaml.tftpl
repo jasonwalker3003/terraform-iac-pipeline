@@ -1,0 +1,56 @@
+#cloud-config
+package_update: true
+packages:
+  - docker.io
+  - docker-compose-v2
+write_files:
+  - path: /opt/app/compose.yaml
+    content: |
+      services:
+        app:
+          image: ${acr}.azurecr.io/${image}
+          ports:
+            - "80:3000"
+          environment:
+            MONGO_URL: mongodb://root:$${MONGO_PASSWORD}@mongo:27017/?authSource=admin
+          depends_on:
+            mongo:
+              condition: service_healthy
+          restart: unless-stopped
+        mongo:
+          image: mongo:8.0
+          environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: $${MONGO_PASSWORD}
+          volumes:
+            - mongo-data:/data/db
+          healthcheck:
+            test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+            interval: 10s
+            timeout: 5s
+            retries: 10
+          restart: unless-stopped
+      volumes:
+        mongo-data:
+  - path: /opt/app/start.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      # Signs in with the VM's managed identity, gets the image and the password, starts the app.
+      set -uo pipefail
+      cd /opt/app || exit 1
+      for i in $(seq 1 30); do
+        if az login --identity --allow-no-subscriptions --output none \
+          && az acr login --name ${acr} --output none \
+          && PW=$(az keyvault secret show --vault-name ${kv} --name mongo-password --query value --output tsv); then
+          break
+        fi
+        echo "Waiting for the VM's roles ($i of 30)"
+        sleep 20
+      done
+      umask 077
+      echo "MONGO_PASSWORD=$PW" > .env
+      docker compose up -d
+runcmd:
+  - curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+  - /opt/app/start.sh > /var/log/app-start.log 2>&1
