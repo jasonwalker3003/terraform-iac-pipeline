@@ -39,3 +39,9 @@ variable "tags" {
   description = "Tags for every resource."
   type        = map(string)
 }
+
+variable "cloud_init" {
+  description = "cloud-init content for first boot. Empty uses the module's nginx file."
+  type        = string
+  default     = ""
+}

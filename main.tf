@@ -37,5 +37,10 @@ module "vm" {
   subnet_id           = module.network.subnet_id
   size                = var.vm_size
   ssh_public_key      = var.ssh_public_key
-  tags                = local.tags
+  cloud_init = var.app_image == "" ? "" : templatefile("${path.root}/cloud-init/docker-app.yaml.tftpl", {
+    acr   = var.acr_name
+    kv    = var.key_vault_name
+    image = var.app_image
+  })
+  tags = local.tags
 }

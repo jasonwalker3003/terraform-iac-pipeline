@@ -41,3 +41,21 @@ variable "create_vm" {
   type        = bool
   default     = true
 }
+
+variable "app_image" {
+  description = "Repository and tag to run, e.g. docker-node-mongo:1.0.0. Empty means the nginx page."
+  type        = string
+  default     = ""
+}
+
+variable "acr_name" {
+  description = "Container registry the VM pulls from."
+  type        = string
+  default     = ""
+}
+
+variable "key_vault_name" {
+  description = "Key Vault the VM reads the database password from."
+  type        = string
+  default     = ""
+}
